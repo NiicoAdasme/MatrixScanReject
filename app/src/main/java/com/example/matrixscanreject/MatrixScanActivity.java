@@ -94,19 +94,28 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
     private RequestQueue queue;
 
-    private final String URL= "http://35.211.170.102/getPreparacion.php";
+    ArrayList<String> listLotes = new ArrayList<>();
+    String bodegaID, posicionID;
 
-    ArrayList<String> list = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Before starting Scan, we need the codes available
+        // We get the information from screen before
+        Bundle bundle = getIntent().getExtras();
+
+        bodegaID = bundle.getString("bodega");
+        posicionID = bundle.getString("posicion");
+        //Toast.makeText(this, bodegaID, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, posicionID, Toast.LENGTH_SHORT).show();
+
+
+        // Before starting Scan, we need the codes availables
         queue = Volley.newRequestQueue(this);
-         //getData();
-        getData();
+        getLotes("http://35.211.170.102/getLote.php?posicion_id="+posicionID);
+        
 
         setContentView(R.layout.activity_matrix_scan);
         setTitle(R.string.app_title);
@@ -129,19 +138,22 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
     }
 
 
-    public void getData() {
+    public void getLotes(String URL) {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i=0; i < response.length(); i++) {
                     try {
                         JSONObject object = new JSONObject(response.get(i).toString());
-                        list.add(object.getString("lote"));
+                        listLotes.add(object.getString("lote"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                Log.v("TAG_ARRAY", String.valueOf(list));
+                if (listLotes.size() == 0) {
+                    Toast.makeText(MatrixScanActivity.this, "No hay lotes asociados a esta posición", Toast.LENGTH_LONG).show();
+                }
+                Log.v("listLotes", listLotes.toString());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -152,7 +164,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         {
             @Override
             protected VolleyError parseNetworkError(VolleyError volleyError) {
-                Log.d("TAG", "volleyError" + volleyError.getMessage());
+                Log.e("VolleyError", volleyError.toString());
                 return super.parseNetworkError(volleyError);
             }
 
@@ -416,10 +428,8 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         //if (barcode.getData().startsWith("7") || barcode.getData().equals("MU034008")  || barcode.getData().matches("MU034007") || barcode.getData().contains("MU034006")) return false;
 
         // Just allow the codes of lotes from db
-        //Log.v("TAG_array_to_string", list.toString());
-        for (int i = 0; i < list.size() ; i++) {
-            //Log.v("TAG_index", list.get(i));
-            if(barcode.getData().equals(list.get(i))) return true;
+        for (int i = 0; i < listLotes.size() ; i++) {
+            if(barcode.getData().equals(listLotes.get(i))) return true;
         }
         return false;
     }

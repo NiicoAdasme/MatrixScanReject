@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">MatrixScanReject</string>
-    <string name="app_title">Matrix Scan Reject</string>
+    <string name="app_name">Verificador de Lotes</string>
+    <string name="app_title">Verificador de Lotes</string>
     <string name="done">Done</string>
     <string name="scan_results">Scan Results</string>
     <string name="scan_again">Scan Again</string>
@@ -27,4 +27,11 @@
     <string name="image_view_item_transform_content_description">Represents an image view in the
         item
     </string>
+    <string name="escanear">Escanear</string>
+    <string name="spinnerBodega" >SpinnerBodega</string>
+    <string name="txt1">¿En que bodega se encuentra?</string>
+    <string name="txt2">¿En que posición se encuentra?</string>
+    <string name="verificadr">Verificador de lotes CLR</string>
+    <string name="camanchaca_logo">camanchaca_logo</string>
+    <string name="mainAcitivty">Main Activity</string>
 </resources>
