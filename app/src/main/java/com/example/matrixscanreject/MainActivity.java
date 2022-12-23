@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -86,6 +87,10 @@ public class MainActivity extends Activity {
                 Log.v("Bodega Selected", text);
                 // do a request to fetch the position from store
                 // code...
+
+                // clear the previous data
+                listPosicion.clear();
+                listPosicion.add("Seleccion Posición...");
                 // find the store id for the store selected
                 for (int i=0; i < bodegas.length(); i++) {
                     try {
@@ -137,6 +142,9 @@ public class MainActivity extends Activity {
                 }
                 // get Lotes and check if exists
                 getLotes("http://35.211.170.102/getLote.php?posicion_id="+posicionID);
+                if (listLotes.size() == 0 && text != "Seleccione Posicion..." && listBodega.size() > 1) {
+                    Toast.makeText(MainActivity.this, "No hay lotes asociados a esta posición", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -173,6 +181,9 @@ public class MainActivity extends Activity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                //spinnerBodega.setAdapter(null);
+                listBodega.clear();
+                listBodega.add("Seleccione Bodega...");
                 for (int i=0; i < response.length(); i++) {
                     try {
                         bodegas.put(response.get(i));
@@ -183,7 +194,6 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
-
                 Log.v("Object Bodegas", bodegas.toString());
                 Log.v("listBodega", listBodega.toString() );
             }
@@ -212,7 +222,7 @@ public class MainActivity extends Activity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s","mmunoz","a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934");
+                String creds = String.format("%s:%s", BuildConfig.USER_REST_API, BuildConfig.PSW_REST_API);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Content-Type", "application/json; charset=utf-8");
                 params.put("Authorization ", auth);
@@ -227,6 +237,7 @@ public class MainActivity extends Activity {
             @Override
             public void onResponse(JSONArray response) {
                 // make sure to clear the previous data before fetch
+                //spinnerUbi.setAdapter(null);
                 listPosicion.clear();
                 listPosicion.add("Seleccione Posicion...");
                 for (int i=0; i < response.length(); i++) {
@@ -269,7 +280,7 @@ public class MainActivity extends Activity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s","mmunoz","a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934");
+                String creds = String.format("%s:%s", BuildConfig.USER_REST_API, BuildConfig.PSW_REST_API);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Content-Type", "application/json; charset=utf-8");
                 params.put("Authorization ", auth);
@@ -283,6 +294,7 @@ public class MainActivity extends Activity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                listLotes.clear();
                 for (int i=0; i < response.length(); i++) {
                     try {
                         JSONObject object = new JSONObject(response.get(i).toString());
@@ -318,7 +330,7 @@ public class MainActivity extends Activity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s","mmunoz","a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934");
+                String creds = String.format("%s:%s", BuildConfig.USER_REST_API, BuildConfig.PSW_REST_API);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Content-Type", "application/json; charset=utf-8");
                 params.put("Authorization ", auth);

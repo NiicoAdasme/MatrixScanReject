@@ -82,7 +82,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
     // Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "AVjSbjncG+pwDeDn1EG/ua8/Tzm5Q2nG5T37l0x89JjjUJAHeH6FhUBDpSyxU6fbJ2HIz9UDDBo9c/mUjyQBwvZNAPw1RDJCGWsw+GNg4glaf/GhhG/ncj1LtvX9dUaihUukbPg2+OcsE6xgtj93fY0abZNKhix6j6bMa2lB6D3Zq9EKSPN4bzgbzon/8GK5kWVihZJ5raLi8Gs2sO4PtKRpDx9SJyHcCSEH7hxOHdh7VNNmBzAOF30gHWBWx8bfArFs4h0RJCIPsgK0PdwwKUIThPjYG+oN7sZAAbRiGN1gwY3EORihuwg9YAnYdIVxTqFJQsTmYaP4AD3676ypDpKTLqyCd7p3KvWIyCGU6GRK7t9RsWSg0ou0sMlqcoxD7WK9Jsap+sfu236rcbuInRP4BI8MZ0OgA4XC7131xDAhPTXA1tBJQMt8w4SiaGK3StYXgnxBW7oNoWoqHmKHq0+z9GXBc6gmjntrEi0EQg+L69LYDE6fETg0jhWp1Egk/8PfyJ12NxJleGktJ+LBbIYCXVsXKkuuXhlTcGE5zh1rWlecvzxwIVhUKyzJ+f3s5KMysYKrQdMBEJYvfUZGCScgcpLXuah3HYV7y0++Uljiivjbx5LTHJzuDyNHdmk9p0q0l2qfY+MTN2dv/h1EWQpq1MjnZeIZJOHX7pzpEEJTlPdHBbBE0YtfAKdQwrj46U9g/bp4RRhIQn4733Wd5HTxS6eX62dGWFFKt98H3mS8NSmyNE+9bRVpcIWeZKjY6rMSQoKJWzcrsgMdWSKWliNuIfJ52899f1tRXMA88r4FYapd/Ht3vJ71gigsYjJ8IL1QYQ==";
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE;
 
     public static final int REQUEST_CODE_SCAN_RESULTS = 1;
 
@@ -142,6 +142,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                listLotes.clear();
                 for (int i=0; i < response.length(); i++) {
                     try {
                         JSONObject object = new JSONObject(response.get(i).toString());
@@ -179,7 +180,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s","mmunoz","a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934");
+                String creds = String.format("%s:%s", BuildConfig.USER_REST_API, BuildConfig.PSW_REST_API);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                 params.put("Content-Type", "application/json; charset=utf-8");
                 params.put("Authorization ", auth);

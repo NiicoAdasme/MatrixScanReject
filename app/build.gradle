@@ -2,6 +2,11 @@ plugins {
     id 'com.android.application'
 }
 
+def SCANDIT_API_KEY = '"' + SCANDIT_LICENSE + '"' ?: '"Mensaje de Error"'
+def USER_API = '"' + USER_REST_API + '"' ?: '"Mensaje de Error"'
+def PSW_API = '"' + PSW_REST_API + '"' ?: '"Mensaje de Error"'
+def STRING = 'String'
+
 android {
     namespace 'com.example.matrixscanreject'
     compileSdk 33
@@ -14,12 +19,33 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        each {
+            type -> type.buildConfigField STRING, 'SCANDIT_LICENSE', SCANDIT_API_KEY
+                type.buildConfigField STRING, 'USER_REST_API', USER_API
+                type.buildConfigField STRING, 'PSW_REST_API', PSW_API
+        }
+        manifestPlaceholders = [
+                SCANDIT_API_KEY: SCANDIT_API_KEY,
+                USER_API: USER_API,
+                PSW_API: PSW_API
+        ]
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            //buildConfigField "String", "USER_API", "mmunoz"
+            //buildConfigField "String", "PSW_API", "a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934"
+        }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            //buildConfigField "String", "USER_API", "mmunoz"
+            //buildConfigField "String", "PSW_API", "a8dab92ff8dfa9f45aa89f551c56188d93683c4aa3db6b84aba748872221b934"
         }
     }
     compileOptions {
